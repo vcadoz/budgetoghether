@@ -1,9 +1,12 @@
 "use client";
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "../../../firebase";
 import { useRouter } from "next/navigation";
+import { addUser } from "../../../firestore";
+import { createBridgeUser, getBridgeToken } from "../../../bridge";
+
 
 export default function Register() {
     const [email, setEmail] = useState("");
@@ -11,6 +14,7 @@ export default function Register() {
     const [confirmation, setConfirmation] = useState("");
     const [error, setError] = useState("");
     const router = useRouter();
+    const [name, setName] = useState("")
 
     async function handleSubmit(event: FormEvent) {
         event.preventDefault(); setError("");
@@ -19,8 +23,18 @@ export default function Register() {
             return;
         }
         try {
-            await createUserWithEmailAndPassword(getAuth(app), email, password);
-            router.push("/login");
+            const userInfo = await createUserWithEmailAndPassword(getAuth(app), email, password);
+            const credential = await signInWithEmailAndPassword( getAuth(app), email, password );
+            const idToken = await credential.user.getIdToken();
+            const bridgeUser = await createBridgeUser()
+            const bridgeToken = await getBridgeToken(bridgeUser.uuid)
+            await addUser(userInfo.user.uid, name, email, bridgeUser.uuid, bridgeToken.access_token, bridgeToken.expires_at )
+            await fetch("/api/login", {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
+            });
+            router.push("/");
         } catch (e) {
             setError((e as Error).message);
         }
@@ -44,7 +58,22 @@ export default function Register() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 id="email"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="name@company.com"
+                                placeholder="Email"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white" >
+                                Your name
+                            </label>
+                            <input 
+                                type="name"
+                                name="name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                id="name"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Name"
                                 required
                             />
                         </div>

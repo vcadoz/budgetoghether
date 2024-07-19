@@ -4,6 +4,7 @@ from "react"; import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "../../../firebase";
+import { isTokenValid } from "../../../bridge";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ export default function Login() {
         try {
             const credential = await signInWithEmailAndPassword( getAuth(app), email, password );
             const idToken = await credential.user.getIdToken();
+            await isTokenValid();
             await fetch("/api/login", {
                 headers: {
                     Authorization: `Bearer ${idToken}`
@@ -25,8 +27,8 @@ export default function Login() {
             setError((e as Error).message);
         }
     } return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-8">
-            <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <main className="flex items-center justify-center h-screen">
+                <div className="bg-white p-8 max-w-md rounded-lg shadow-md">
                 <div className="p-6 space-y-4 md:space-y-6 sm:p-8"> 
                     <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         Speak thy secret word!

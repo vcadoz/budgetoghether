@@ -24,37 +24,20 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const tokens = await getTokens(cookies(), {
-    apiKey: clientConfig.apiKey,
-    cookieName: serverConfig.cookieName,
-    cookieSignatureKeys: serverConfig.cookieSignatureKeys,
-    serviceAccount: serverConfig.serviceAccount
-  });
-  if (tokens) {
     return (
       <html lang="en">
         <body
           className={cn(
-            "min-h-screen w-full bg-white text-black flex ",
+            "min-h-screen w-full flex flex-col items-center justify-center",
             inter.className,
             {
               "debug-screens": process.env.NODE_ENV === "development"
             }
           )}
         >
-          {/* sidebar */}
-          {/* <p className="border">Sidebar</p> */}
-          <SideNavbar />
           {/* main page */}
-          <div className="p-8 w-full">{children}</div>
+          <div className="w-full max-w max-h p-6 bg-white rounded-lg">{children}</div>
         </body>
       </html>
     );
-  }
-  else {
-    return(
-    <html lang="en"><body>
-      <div className="p-8 w-full">{children}</div>
-    </body></html>)
-  }
 } 

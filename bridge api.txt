@@ -1,5 +1,0 @@
-bridge api:
-58e26ae0f7834572817681b12c1ee037
-
-Client Secret:
-grImjzLlwZ5ifmTBy4DHFiOYmWGgnwICfHtbXVidheU39ZJ7gbF3l6hk3ClVpFtu

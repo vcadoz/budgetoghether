@@ -11,6 +11,7 @@ import { DataTable } from "@/components/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import React from "react";
 import PageTitle from "@/components/PageTitle";
+import SideNavbar from "@/components/SideNavbar";
 
 type Props = {};
 type Payment = {
@@ -148,9 +149,14 @@ const data: Payment[] = [
 
 export default function UsersPage({}: Props) {
   return (
+  <div className="min-h-screen flex">
+    <SideNavbar />
+    <div className="p-8 w-full">
     <div className="flex flex-col gap-5  w-full">
       <PageTitle title="Users" />
       <DataTable columns={columns} data={data} />
+    </div>    </div>
     </div>
+
   );
 }

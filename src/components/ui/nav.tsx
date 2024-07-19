@@ -28,6 +28,15 @@ interface NavProps {
 
 export function Nav({ links, isCollapsed }: NavProps) {
   const pathName = usePathname();
+
+  // Fonction pour déterminer si un lien est actif
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathName === href; // Exact match for the root path
+    }
+    return pathName.startsWith(href);
+  };
+
   return (
     <TooltipProvider>
       <div
@@ -43,7 +52,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     href={link.href}
                     className={cn(
                       buttonVariants({
-                        variant: link.href === pathName ? "default" : "ghost",
+                        variant: isActive(link.href) ? "default" : "ghost",
                         size: "icon"
                       }),
                       "h-9 w-9",
@@ -73,7 +82,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 href={link.href}
                 className={cn(
                   buttonVariants({
-                    variant: link.href === pathName ? "default" : "ghost",
+                    variant: isActive(link.href) ? "default" : "ghost",
                     size: "sm"
                   }),
                   link.variant === "default" &&

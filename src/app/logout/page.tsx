@@ -10,7 +10,8 @@ export default function HomePage() {
         await fetch("/api/logout");
         router.push("/login");
     } return (
-        <main className="flex min-h-screen flex-col items-center justify-center p-24">
+        <div className="w-full">
+        <main className="flex  flex-col items-center justify-center">
             <h1 className="text-xl mb-4">
                 Super secure home page
             </h1>
@@ -24,6 +25,6 @@ export default function HomePage() {
             >
                 Logout
             </button>
-        </main>
+        </main></div>
     );
 }

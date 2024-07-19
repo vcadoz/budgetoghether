@@ -1,6 +1,5 @@
 /** @format */
 import PageTitle from "@/components/PageTitle";
-import Image from "next/image";
 import { DollarSign, Users, CreditCard, Activity } from "lucide-react";
 import Card, { CardContent, CardProps } from "@/components/Card";
 import BarChart from "@/components/BarChart";
@@ -9,7 +8,7 @@ import { getTokens } from "next-firebase-auth-edge";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { clientConfig, serverConfig } from "../../config";
-import { redirect } from 'next/navigation'
+import SideNavbar from "@/components/SideNavbar";
 
 const cardData: CardProps[] = [
   {
@@ -77,7 +76,11 @@ const tokens = await getTokens(cookies(), {
 if (!tokens) {
   notFound();
 } return (
-  <div className="flex flex-col gap-5  w-full">
+  <div className="min-h-screen flex">
+      <SideNavbar />
+      <div className="p-8 w-full">
+  <div className="flex flex-col gap-5  w-full ">
+    
       <PageTitle title={"hello " + tokens?.decodedToken.email} />
       <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
         {cardData.map((d, i) => (
@@ -115,6 +118,6 @@ if (!tokens) {
 
         {/*  */}
       </section>
-    </div>
+    </div></div></div>
   );
 }
